@@ -1,0 +1,17 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+}
+header{
+    background-color:rgb(91, 91, 127);
+    padding:0.5em;
+    font-size:2em;
+    color:white;
+}
+
+.card{
+    margin:4em;
+}
+
+#warning{
+    color:red;
+}
