@@ -24,7 +24,7 @@ class Category(models.Model):
 class Event(models.Model):
     event_id = models.AutoField(primary_key=True)
     account_id = models.ForeignKey(Account, on_delete = models.CASCADE)
-    category_id = models.ForeignKey(Category, on_delete = models.CASCADE)
+    category_id = models.ForeignKey(Category, on_delete = models.CASCADE, null = True, blank = True)
     location = models.CharField(max_length=100)
     event_start_date = models.DateField()
     event_start_time = models.TimeField(auto_now=False, auto_now_add=False, null=True, blank=True) # can be null
@@ -51,12 +51,12 @@ class Event(models.Model):
 class Task(models.Model):
     task_id = models.AutoField(primary_key=True)
     account_id = models.ForeignKey(Account, on_delete = models.CASCADE)
-    category_id = models.ForeignKey(Category, on_delete = models.CASCADE)
-    event_id = models.ForeignKey(Event, on_delete = models.CASCADE)
+    category_id = models.ForeignKey(Category, on_delete = models.CASCADE, null = True, blank = True)
+    event_id = models.ForeignKey(Event, on_delete = models.CASCADE, null = True, blank = True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
     due_date = models.DateField()
-    due_time = models.TimeField(auto_now=False, auto_now_add=False)
+    due_time = models.TimeField(auto_now=False, auto_now_add=False, null = True, blank = True)
     completed = models.BooleanField()
     created_on = models.DateTimeField(auto_now=True)
 
