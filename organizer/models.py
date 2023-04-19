@@ -36,7 +36,7 @@ class Event(models.Model):
     class Meta:
         constraints = [
             CheckConstraint(
-                check = Q(event_end_date__gt=F('event_start_date')), # end date must be greater than start date (using __gt)
+                check = Q(event_end_date__gte=F('event_start_date')), # end date must be greater than start date (using __gt)
                 name = 'check_start_date',
             ),
             CheckConstraint(
