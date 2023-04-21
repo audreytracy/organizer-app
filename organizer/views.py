@@ -82,10 +82,10 @@ def events(request):
 
 def command(request, id, cmd):
     event = Event.objects.get(pk = id)
-    acct = event.account_id
+    acct = logged_in_user
     if cmd == "delete":
         event.delete()
     if cmd == "details":
         return render(request, "organizer/event_detail.html", context={'event' : event})
     #return render(request, "organizer/events.html", context={'events' : Event.objects.filter(account_id = acct).order_by("event_start_date")})
-    return redirect('events', acct=acct.account_id)
+    return redirect('events', acct=logged_in_user)

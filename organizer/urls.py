@@ -11,5 +11,5 @@ urlpatterns = [
    path('settings/', views.settings, name="settings"),
    path('logout/', views.logout, name="logout"),
    path('events/', views.events, name="events"),
-   path('command/', views.command),
+   path('command/<id>/<cmd>', views.command),
 ]
