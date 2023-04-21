@@ -38,7 +38,6 @@ def create(request):
         return render(request, 'organizer/create.html', context = {'success_message' : "account created successfully!"})
     return render(request, 'organizer/create.html', context = None)
 
-@login_required(login_url="login")
 def settings(request):
     global logged_in_user
     if logged_in_user == 0:
@@ -66,6 +65,7 @@ def settings(request):
     return render(request, "organizer/settings.html", context={'data':data})
 
 def calendar(request):
+    global logged_in_user
     if logged_in_user == 0:
         return render(request, "organizer/login.html", context=None)
     return render(request, "organizer/calendar.html", context={'acct_id' : logged_in_user})
@@ -76,6 +76,9 @@ def logout(request):
     return render(request, "organizer/login.html", context={'user_not_found_message': "successfully logged out"})
 
 def events(request):
+    global logged_in_user
+    if logged_in_user == 0:
+        return render(request, "organizer/login.html", context=None)
     events = Event.objects.filter(account_id = logged_in_user).order_by("event_start_date")
     categories = Category.objects.filter(account_id = logged_in_user).order_by("name")
     return render(request, "organizer/events.html", context={'events': events, 'acct' : logged_in_user, 'categories': categories})
@@ -88,4 +91,4 @@ def command(request, id, cmd):
     if cmd == "details":
         return render(request, "organizer/event_detail.html", context={'event' : event})
     #return render(request, "organizer/events.html", context={'events' : Event.objects.filter(account_id = acct).order_by("event_start_date")})
-    return redirect('events', acct=logged_in_user)
+    return redirect('events')
