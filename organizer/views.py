@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from organizer.models import Account, Category
+from django.shortcuts import redirect, render
+from organizer.models import Account, Category, Event
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -74,3 +74,18 @@ def logout(request):
     global logged_in_user
     logged_in_user = 0
     return render(request, "organizer/login.html", context={'user_not_found_message': "successfully logged out"})
+
+def events(request):
+    events = Event.objects.filter(account_id = logged_in_user).order_by("event_start_date")
+    categories = Category.objects.filter(account_id = logged_in_user).order_by("name")
+    return render(request, "organizer/events.html", context={'events': events, 'acct' : logged_in_user, 'categories': categories})
+
+def command(request, id, cmd):
+    event = Event.objects.get(pk = id)
+    acct = event.account_id
+    if cmd == "delete":
+        event.delete()
+    if cmd == "details":
+        return render(request, "organizer/event_detail.html", context={'event' : event})
+    #return render(request, "organizer/events.html", context={'events' : Event.objects.filter(account_id = acct).order_by("event_start_date")})
+    return redirect('events', acct=acct.account_id)
