@@ -19,7 +19,20 @@
 </head>
 
 <body>
-    <h1>This is the calendar page, had to add it to make my view work but clearly I haven't done anything to it lol</h1>
+    <header>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <a class="btn btn-secondary" href="{% url 'calendar' %}">calendar</a>
+                <a class="btn btn-secondary" href="">to-do</a>
+                <a class="btn btn-secondary" href="">create event</a>
+            </div>
+            <div>
+                <a class="btn btn-secondary" href="{% url 'settings' %}">settings</a>
+                <a class="btn btn-secondary" href="{% url 'logout' %}">logout</a>
+            </div>
+        </div>
+    </header>
+    <p>This is the calendar page, had to add it to make my view work but clearly I haven't done anything calendar-y to it lol</p>
     <h2>user: {{acct_id}}</h2>
 </body>
 
