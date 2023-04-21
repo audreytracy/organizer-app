@@ -1,0 +1,90 @@
+{%load static%}
+<div class="nav-buttons">
+    <a href="{% url 'weekly-calendar' %}?week_start={{ prev_week }}">&lt;&lt; Previous week</a>
+    <h1>{{ month }} {{ year }}</h1>
+    <a href="{% url 'weekly-calendar' %}?week_start={{ next_week }}">Next week &gt;&gt;</a></div>
+
+<div>
+    <select id="calendar-view">
+        <option value="yearly">Yearly calendar</option>
+        <option value="monthly">Monthly calendar</option>
+        <option value="weekly" selected>Weekly calendar</option>
+    </select>
+</div>
+
+<div class="weekdays">
+    <div class="day-header">Sun</div>
+    <div class="day-header">Mon</div>
+    <div class="day-header">Tue</div>
+    <div class="day-header">Wed</div>
+    <div class="day-header">Thu</div>
+    <div class="day-header">Fri</div>
+    <div class="day-header">Sat</div>
+</div>
+
+<div class="week">
+    {% for date in dates %}
+    <div class="day">
+        <div class="day-label">{{ date|date:'D' }}</div>
+        <div class="date-label">{{ date|date:'d' }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.nav-buttons a {
+    margin: 0 1rem;
+}
+
+.weekdays {
+    display: flex;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+.day-header {
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid black;
+    padding: 5px;
+    }
+.day {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    flex: 1;
+}
+.day-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.date-label {
+    font-size: 1.2em;
+    margin-top: 5px;
+}
+.nav-buttons {
+    margin-top: 20px;
+}
+</style>
+
+
+
+    <script>
+        const calendarView = document.getElementById('calendar-view');
+        calendarView.addEventListener('change', function() {
+            const selectedView = calendarView.value;
+            if (selectedView === 'yearly') {
+                window.location.href = '#';
+            } else if (selectedView === 'monthly') {
+                window.location.href = '#';
+            }
+        });
+    </script>
