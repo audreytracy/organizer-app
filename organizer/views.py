@@ -20,7 +20,7 @@ def login(request):
             return render(request, "organizer/login.html", context={'user_not_found_message': "user not found"})
         global logged_in_user
         logged_in_user =  Account.objects.filter(username = username, password = password, email = email).first().pk
-        return calendar(request)
+        return redirect('calendar')
     return render(request, "organizer/login.html", context=None)
     
 
