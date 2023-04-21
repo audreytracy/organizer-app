@@ -8,4 +8,6 @@ urlpatterns = [
    path('calendar/', views.calendar, name="calendar"),
    path('create/', views.create, name="create"),
    path('login/', views.login, name="login"),
+   path('<acct>/events/', views.events, name="events"),
+   path('command/<id>/<cmd>', views.command),
 ]

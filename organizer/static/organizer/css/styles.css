@@ -15,3 +15,42 @@ header{
 #warning{
     color:red;
 }
+
+h3{
+    text-align: center;
+    color:rgb(91, 91, 127);
+    margin: 20px;
+}
+
+a{
+    margin-left: 10px;
+    margin-right: 10px;
+    justify-content: right;
+}
+
+.main-aside{
+    width: 25%;
+    float: right;
+    background-color: rgb(195, 195, 213);
+    text-align: center;
+    padding-bottom: 80%;
+    padding-right: 10px;
+    padding-left:10px;
+    padding-top:40px;
+}
+
+.btn{
+    background-color: white;
+    color: rgb(91, 91, 127);
+    border-color: rgb(91, 91, 127);
+}
+
+table, tr, td, th{
+    color: rgb(91, 91, 127);
+    padding: 10px;
+    background-color: white;
+    float: center;
+}
+th{
+    font-size: larger;
+}

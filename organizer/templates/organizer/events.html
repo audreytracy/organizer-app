@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+      crossorigin="anonymous"
+    />
+    <title>Events</title>
+    <link href="{% static 'organizer\css\styles.css' %}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header>Organizer App</header>
+    <aside class="main-aside">
+      <a href="/" class="btn btn-primary" style="float: center">Add Event</a>
+      <table
+        class="card"
+        style="
+          width: 200px;
+          float: center;
+          border-width: 3px;
+          border-color: black;
+        "
+      >
+        <th style="float: center" colspan="2">Categories</th>
+        {% for category in categories %}
+        <tr>
+          <td>
+            <div
+              style="
+                background: {{category.color}};
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+                border-radius: 50%;
+                display: inline-block;
+              "
+            ></div>
+          </td>
+          <td>
+            <h5 style="display: inline-block">{{ category.name }}</h5>
+          </td>
+        </tr>
+        {%endfor%}
+      </table>
+    </aside>
+    <div>
+      <h3>My Events:</h3>
+      <div style="display: flex; flex-direction: column; flex-wrap: wrap">
+        {% for event in events %}
+        <div class="card" style="width: 75%; margin: 10px; align-self: center">
+          <div class="card-body">
+            <div
+              style="
+                background: {{event.category_id.color}};
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+                border-radius: 50%;
+                display: inline-block;
+              "
+            ></div>
+            <h5 class="card-title" style="display: inline-block">
+              {{ event.name }}
+            </h5>
+            <a
+              href="/command/{{ event.event_id }}/details"
+              class="btn btn-primary"
+              style="display: inline-block; float: right"
+              >Edit</a
+            >
+            <a
+              href="/command/{{ event.event_id }}/delete"
+              class="btn btn-primary"
+              style="display: inline-block; float: right"
+              >Delete</a
+            >
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>

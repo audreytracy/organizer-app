@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from organizer.models import Account
+from django.shortcuts import render, redirect
+from organizer.models import Account, Event, Category
+
 
 def login(request):
     if request.method == 'POST':
@@ -11,7 +12,7 @@ def login(request):
         if not Account.objects.filter(username = username, password = password, email = email).exists():
             return render(request, "organizer/login.html", context={'user_not_found_message': "user not found"})
         acct_id =  Account.objects.filter(username = username, password = password, email = email).first().pk
-        return calendar(request, acct_id)
+        return events(request, acct_id)
     return render(request, "organizer/login.html", context=None)
     
 def create(request):
@@ -27,3 +28,18 @@ def create(request):
 
 def calendar(request, acct_id):
     return render(request, "organizer/calendar.html", context={'acct_id' : acct_id})
+
+def events(request, acct):
+    events = Event.objects.filter(account_id = acct).order_by("event_start_date")
+    categories = Category.objects.filter(account_id = acct).order_by("name")
+    return render(request, "organizer/events.html", context={'events': events, 'acct' : acct, 'categories': categories})
+
+def command(request, id, cmd):
+    event = Event.objects.get(pk = id)
+    acct = event.account_id
+    if cmd == "delete":
+        event.delete()
+    if cmd == "details":
+        return render(request, "organizer/event_detail.html", context={'event' : event})
+    #return render(request, "organizer/events.html", context={'events' : Event.objects.filter(account_id = acct).order_by("event_start_date")})
+    return redirect('events', acct=acct.account_id)
