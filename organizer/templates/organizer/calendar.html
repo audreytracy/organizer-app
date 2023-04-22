@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-        <!-- local styles -->
+    <!-- local styles -->
     <link href="{% static 'organizer\css\styles.css' %}" rel="stylesheet">
 </head>
 
@@ -32,8 +32,124 @@
             </div>
         </div>
     </header>
-    <p>This is the calendar page, had to add it to make my view work but clearly I haven't done anything calendar-y to it lol</p>
-    <h2>user: {{acct_id}}</h2>
+
+    <div class="nav-buttons">
+        <div style="display: flex;">
+                <button class="btn btn-secondary" id="prev_month">&lt;&lt; Previous month</button>
+                <h1 class = "nav-buttons">{{ month }} {{ year }}</h1>
+                <button class="btn btn-secondary" id="next_month">Next month &gt;&gt;</button>
+        </div>
+
+
+        
+    </div>
+
+    <div>
+        <select id="calendar-view">
+            <option value="monthly">Monthly calendar</option>
+            <option value="weekly" selected>Weekly calendar</option>
+        </select>
+    </div>
+
+    <div class="weekdays">
+        <div class="day-header">Sun</div>
+        <div class="day-header">Mon</div>
+        <div class="day-header">Tue</div>
+        <div class="day-header">Wed</div>
+        <div class="day-header">Thu</div>
+        <div class="day-header">Fri</div>
+        <div class="day-header">Sat</div>
+    </div>
+
+    <ul class="week">
+        {% for date in dates %}
+        <li>
+            <div class="date-label">{{ date|date:'d' }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <style>
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem;
+        }
+
+        .nav-buttons a {
+            margin: 0 1rem;
+        }
+
+        .weekdays {
+            display: flex;
+            border-bottom: 1px solid black;
+            margin-bottom: 10px;
+        }
+
+        .day-header {
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid black;
+            padding: 5px;
+        }
+
+        .day {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .day-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .date-label {
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+
+        .nav-buttons {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        li {
+            width: 14.28%;
+            /* 100% / 7 columns */
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid black;
+        }
+    </style>
+    <script>
+        document.getElementById('prev_month').addEventListener('click', function () {
+            const month_now = parseInt('{{ month_num }}');
+            const year_now = parseInt('{{ year }}');
+            const month_new = month_now === 1 ? 12 : month_now - 1;
+            const year_new = month_now === 1 ? year_now - 1 : year_now;
+            window.location.href = `{% url 'calendar' %}?month=${month_new}&year=${year_new}`;
+        });
+        document.getElementById('next_month').addEventListener('click', function () {
+            const month_now= parseInt('{{ month_num }}');
+            const year_now = parseInt('{{ year }}');
+            const month_new = month_now === 12 ? 1 : month_now + 1;
+            const year_new = month_now === 12 ? year_now + 1 : year_now;
+            window.location.href = `{% url 'calendar' %}?month=${month_new}&year=${year_new}`;
+        });
+
+    </script>
 </body>
 
 </html>

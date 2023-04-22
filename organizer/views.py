@@ -3,6 +3,11 @@ from organizer.models import Account, Category, Event
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from django.views.generic import TemplateView
+from django.utils import timezone
+from calendar import monthrange
+from datetime import timedelta
+
 # id of the current logged in user (to make passing data btwn views easier)
 logged_in_user:int = 0
 
@@ -92,3 +97,36 @@ def command(request, id, cmd):
         return render(request, "organizer/event_detail.html", context={'event' : event})
     #return render(request, "organizer/events.html", context={'events' : Event.objects.filter(account_id = acct).order_by("event_start_date")})
     return redirect('events')
+
+
+class WeeklyCalendarView(TemplateView):
+    template_name = 'organizer/calendar.html'
+
+
+    def get_context_data(self, month = None, year = None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        year = int(self.request.GET.get('year', timezone.now().year))
+        month = int(self.request.GET.get('month', timezone.now().month))
+
+        # Calculate the first and last days of the week
+        # (Assuming Sunday is the first day of the week)
+        first_day_of_month = timezone.datetime(year, month, 1)
+        weekdays_lookup = {'Sunday':0,'Monday':1,'Tuesday':2,'Wednesday':3,'Thursday':4,'Friday':5,'Saturday':6}
+        first_day_shift = weekdays_lookup[first_day_of_month.strftime('%A')] # how many days you need to skip to 
+        last_day_of_month = timezone.datetime(year, month, monthrange(year, month)[1])
+        first_day_of_week = first_day_of_month - timedelta(days=first_day_of_month.weekday())
+        while first_day_of_week.month != month: # adjust if first day of week is not in the same month
+            first_day_of_week = first_day_of_week + timedelta(days=1)
+
+        # Generate a list of dates representing each day of the week
+        dates = ['' for i in range(first_day_shift)]
+        for i in range(last_day_of_month.day):
+            date = first_day_of_week + timedelta(days=i)
+            dates.append(date)
+        months = {1:'January', 2:'February', 3:'March', 4:'April',5:'May', 6:'June', 7:'July', 8:'August',9:'September', 10:'October', 11:'November', 12:'December'}
+        # Add the year, month, first_day_of_week, and last_day_of_week to the context
+        context['year'] = year
+        context['month'] = months[month]
+        context['month_num'] = month
+        context['dates'] = dates
+        return context
