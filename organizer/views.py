@@ -130,3 +130,37 @@ class WeeklyCalendarView(TemplateView):
         context['month_num'] = month
         context['dates'] = dates
         return context
+
+def addEvent(request):
+    acct_id = logged_in_user
+    cats = Category.objects.filter(account_id = acct_id).order_by("name")
+    if request.method == 'POST':
+        acct = Account.objects.get(pk=acct_id)
+        category_id = request.POST.get('category_box')
+        location = request.POST.get('location_text_box')
+        event_start_date = request.POST.get('sdate')
+        event_start_time = request.POST.get('stime')
+        event_end_date = request.POST.get('edate')
+        event_end_time = request.POST.get('etime')
+        name = request.POST.get('n')
+        description = request.POST.get('description')
+        if not location or not event_start_date or not name or not description:
+            return render(request, "organizer/add_event.html", context={'acct' : acct_id,'success_message': "missing fields", 'cats': cats})
+        elif not event_start_time and not event_end_time and not event_end_date:
+            Event.objects.create(account_id = acct, category_id = category_id, location = location, name = name, description = description, event_start_date = event_start_date)
+        elif not event_start_time and not event_end_time:
+            Event.objects.create(event_end_date = event_end_date, account_id = acct, category_id = category_id, location = location, name = name, description = description, event_start_date = event_start_date)
+        elif not event_start_time and not event_end_date:
+            Event.objects.create(event_event_end_time = event_end_time, account_id = acct, category_id = category_id, location = location, name = name, description = description, event_start_date = event_start_date)
+        elif not event_end_time and not event_end_date:
+            Event.objects.create(event_start_time = event_start_time, account_id = acct, category_id = category_id, location = location, name = name, description = description, event_start_date = event_start_date)
+        elif not event_start_time:
+            Event.objects.create(account_id = acct, category_id = category_id, location = location, event_start_date = event_start_date, event_end_date = event_end_date, event_end_time = event_end_time, name = name, description = description)
+        elif not event_end_time:
+            Event.objects.create(account_id = acct, category_id = category_id, location = location, event_start_date = event_start_date, event_start_time = event_start_time, event_end_date = event_end_date, name = name, description = description)
+        elif not event_end_date:
+            Event.objects.create(account_id = acct, category_id = category_id, location = location, event_start_date = event_start_date, event_start_time = event_start_time, event_end_time = event_end_time, name = name, description = description)
+        else:
+            Event.objects.create(account_id = acct, category_id = category_id, location = location, event_start_date = event_start_date, event_start_time = event_start_time, event_end_date = event_end_date, event_end_time = event_end_time, name = name, description = description)
+        return render(request, 'organizer/add_event.html', context = {'acct' : acct_id,'success_message' : "account created successfully!", 'cats': cats})
+    return render(request, 'organizer/add_event.html', context = {'acct' : acct_id, 'cats': cats})

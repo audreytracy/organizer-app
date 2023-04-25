@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', views.logout, name="logout"),
     path('events/', views.events, name="events"),
     path('command/<id>/<cmd>', views.command),
+    path('add_event/', views.addEvent, name="addevent"),
 ]
