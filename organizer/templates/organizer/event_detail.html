@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,6 +13,73 @@
   </head>
 
   <body>
-    <h1>{{event.name}}</h1>
+    <h1>{{event.name}} Details</h1>
+    <table>
+      <tr>
+        <td><label for="name">name</label></td>
+        <td>
+          <input id="name" type="text" name="n" placeholder="{{event.name}}" />
+        </td>
+      </tr>
+      <tr>
+        <td><label for="category">category</label></td>
+        <td>
+          <select name="category_box" id="category">
+            <option value="{{event.category_id.name}}">
+              {{event.category_id.name}}
+            </option>
+            {%for category in cats%}
+            <option value="{{category.name}}">{{category.name}}</option>
+            {%endfor%}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="location">location</label></td>
+        <td>
+          <input
+            id="location"
+            type="text"
+            name="location_text_box"
+            placeholder="{{event.location}}"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td><label for="startdate">start date</label></td>
+        <td>
+          <input id="startdate" type="date" name="sdate" />
+        </td>
+      </tr>
+      <tr>
+        <td><label for="enddate">end date</label></td>
+        <td>
+          <input id="enddate" type="date" name="edate" />
+        </td>
+      </tr>
+      <tr>
+        <td><label for="starttime">start time</label></td>
+        <td>
+          <input id="starttime" type="time" name="stime" />
+        </td>
+      </tr>
+      <tr>
+        <td><label for="endtime">end time</label></td>
+        <td>
+          <input id="endtime" type="time" name="etime" />
+        </td>
+      </tr>
+      <tr>
+        <td><label for="descript">description</label></td>
+        <td>
+          <input
+            id="descript"
+            type="text"
+            name="description"
+            placeholder="{{event.description}}"
+          />
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
