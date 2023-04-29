@@ -134,6 +134,13 @@ def add_task(request):
             return render(request, "organizer/add_task.html", context={"acct": acct_id, "success_message": "event created successfully!", "cats": cats})#, "initial_event":event})
     return render(request, 'organizer/add_task.html', context = {'acct' : acct_id, 'cats': cats})
 
+def edit_task(request):
+    global logged_in_user
+    if logged_in_user == 0:
+        return render(request, "organizer/login.html", context=None)
+    tasks = Task.objects.filter(account_id = logged_in_user).order_by("due_date")
+    categories = Category.objects.filter(account_id = logged_in_user).order_by("name")
+    return render(request, "organizer/edit_task.html", context={'tasks': tasks, 'acct' : logged_in_user, 'categories': categories})
 
 
 class WeeklyCalendarView(TemplateView):
