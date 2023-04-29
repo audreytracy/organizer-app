@@ -56,17 +56,22 @@ def settings(request):
         email = request.POST.get('email_text_box')
         category_name = request.POST.get('myCategories')
         password = request.POST.get('password_text_box')
+        delete_cat = request.POST.get('delete_category') # is None when unchecked, Delete when checked
+        
         color = request.POST.get('colors')
-        if category_name and color:
+        if delete_cat == 'Delete':
+            Category.objects.filter(name = category_name).delete()
+            messages.info(request, "category deleted!")
+        elif category_name and color:
             Category.objects.update_or_create(name = category_name, account_id_id = user.account_id, defaults ={'color':color})
             messages.info(request, "category info saved!")
-        if username and username != user.username:
+        elif username and username != user.username:
             Account.objects.update_or_create(account_id = user.account_id, defaults ={'username':username})
             messages.info(request, "updated username")
-        if password and password != user.password:
+        elif password and password != user.password:
             Account.objects.update_or_create(account_id = user.account_id, defaults ={'password':password})
             messages.info(request, "updated password")
-        if email and email != user.email:
+        elif email and email != user.email:
             Account.objects.update_or_create(account_id = user.account_id, defaults ={'email':email})
             messages.info(request, "updated email")
     data = Account.objects.values('email','password', 'created_on', 'category__name', 'category__color').filter(account_id = logged_in_user).distinct()
