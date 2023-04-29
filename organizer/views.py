@@ -1,7 +1,9 @@
+from django.forms import ValidationError
 from django.shortcuts import redirect, render
 from organizer.models import Account, Category, Event, Task
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import IntegrityError
 
 from django.views.generic import TemplateView
 from django.utils import timezone
@@ -110,7 +112,27 @@ def add_task(request):
     global logged_in_user
     if logged_in_user == 0:
         return render(request, "organizer/login.html", context=None)
-    return render(request, "organizer/add_task.html", context={'acct_id' : logged_in_user})
+    acct_id = logged_in_user
+    cats = Category.objects.filter(account_id = acct_id).order_by("name")
+    if request.method == 'POST':
+        acct = Account.objects.get(pk=acct_id)
+        category_id = request.POST.get('category')
+        category = Category.objects.get(pk = category_id)
+        due_date = request.POST.get('duedate')
+        due_time = request.POST.get('duetime')
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        try:
+            print("test")
+            Task.objects.create(account_id = acct, category_id = category, completed = False, due_date = due_date, due_time = due_time if due_time != '' else None, name = name, description = description)
+        except IntegrityError as e:
+            return render(request, "organizer/add_task.html", context={"acct": acct_id, "success_message": "Error: " + str(e), "cats": cats})
+        except ValidationError as e:
+            return render(request, "organizer/add_task.html", context={"acct": acct_id, "success_message": "check inputs", "cats": cats})
+
+        else:
+            return render(request, "organizer/add_task.html", context={"acct": acct_id, "success_message": "event created successfully!", "cats": cats})#, "initial_event":event})
+    return render(request, 'organizer/add_task.html', context = {'acct' : acct_id, 'cats': cats})
 
 
 
