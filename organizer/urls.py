@@ -13,4 +13,6 @@ urlpatterns = [
     path('logout/', views.logout, name="logout"),
     path('events/', views.events, name="events"),
     path('command/<id>/<cmd>', views.command),
+    path('to_do/', views.to_do, name="to_do"),
+    path('add_task/', views.add_task, name="add_task"),
 ]

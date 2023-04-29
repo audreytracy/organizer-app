@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from organizer.models import Account, Category, Event
+from organizer.models import Account, Category, Event, Task
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -97,6 +97,21 @@ def command(request, id, cmd):
         return render(request, "organizer/event_detail.html", context={'event' : event})
     #return render(request, "organizer/events.html", context={'events' : Event.objects.filter(account_id = acct).order_by("event_start_date")})
     return redirect('events')
+
+def to_do(request):
+    global logged_in_user
+    if logged_in_user == 0:
+        return render(request, "organizer/login.html", context=None)
+    tasks = Task.objects.filter(account_id = logged_in_user).order_by("due_date")
+    categories = Category.objects.filter(account_id = logged_in_user).order_by("name")
+    return render(request, "organizer/to_do.html", context={'tasks': tasks, 'acct' : logged_in_user, 'categories': categories})
+
+def add_task(request):
+    global logged_in_user
+    if logged_in_user == 0:
+        return render(request, "organizer/login.html", context=None)
+    return render(request, "organizer/add_task.html", context={'acct_id' : logged_in_user})
+
 
 
 class WeeklyCalendarView(TemplateView):
