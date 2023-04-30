@@ -165,6 +165,8 @@ def delete_task(request, id:int):
         return render(request, "organizer/login.html", context=None)
     task = Task.objects.get(pk = id)
     task.delete()
+    # return render(request, 'organizer/to_do.html', context = {'acct' : acct_id, 'cats': cats, "task":task})
+    return redirect('to_do')
 
 
 
