@@ -92,13 +92,13 @@
               </h5>
               {% endif %}
               <a
-                href="/edit_task"
+                href="/edit_task/{{ task.task_id }}"
                 class="btn btn-primary"
                 style="display: inline-block; float: right"
                 >Edit</a
               >
               <a
-                href="/command/{{ event.event_id }}/delete"
+                href="/delete_task/{{ task.task_id }}"
                 class="btn btn-primary"
                 style="display: inline-block; float: right"
                 >Delete</a
