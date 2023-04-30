@@ -55,13 +55,12 @@
                             </tr>
                             <tr>
                                 <div class="form-floating">
-
-                                    <td>Colors</td>
+                                    <td>Colors:</td>
                                     <td>
-                                        <input list="categories" name="myCategories" placeholder="My Categories"/></label>
+                                        <input list="categories" name="myCategories" placeholder="My Categories"/>
                                         <datalist id="categories">
                                             {% for c in data %}
-                                                <option id="{{ c.category__name }}" value = "{{ c.category__name }}">{{c.category__color}} </option>
+                                                <option id="{{ c.category__name }}" value = "{{ c.category__name }}">{{c.category__color}}</option>
                                             {% endfor %}
                                         </datalist>
                                     </td>
@@ -76,6 +75,13 @@
                                     <td> <button class="btn btn-outline-primary">Change</button> </td>
                                 </div>
                             </tr>
+                            <tr>
+                                <!-- <td></td> -->
+                                <td style = "text-align: right;"><input type="checkbox" name="delete_category" value="Delete"></td>
+                                <td>Delete selected category?</td>
+                            </tr>
+                            
+                            <tr><td></td></tr>
                             <tr>
                                 {% if messages %}
                                 <ul class="messages">
