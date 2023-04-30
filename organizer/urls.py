@@ -14,4 +14,9 @@ urlpatterns = [
     path('events/', views.events, name="events"),
     path('command/<int:id>/<str:cmd>', views.command, name = "command"),
     path('add_event/', views.addEvent, name="addevent"),
+    path('to_do/', views.to_do, name="to_do"),
+    path('add_task/', views.add_task, name="add_task"),
+    path('edit_task/<int:id>/', views.edit_task, name = "edit_task"),
+    path('delete_task/<int:id>/', views.delete_task, name = "delete_task"),
+    path('complete_task/<int:id>/', views.complete_task, name = "complete_task"),
 ]
