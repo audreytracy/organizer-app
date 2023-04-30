@@ -82,7 +82,7 @@
                   display: inline-block;
                 "
               ></div>
-              {% if task.completed == true %}
+              {% if task.completed == True %}
               <h5 class="card-title" style="display: inline-block">
                 &#10004  {{ task.name }}
               </h5>
@@ -91,6 +91,7 @@
                 &#10006  {{ task.name }}
               </h5>
               {% endif %}
+
               <a
                 href="/edit_task/{{ task.task_id }}"
                 class="btn btn-primary"
@@ -102,6 +103,12 @@
                 class="btn btn-primary"
                 style="display: inline-block; float: right"
                 >Delete</a
+              >
+              <a
+              href="/complete_task/{{ task.task_id }}"
+              class="btn btn-primary"
+              style="display: inline-block; float: right"
+              >Complete</a
               >
               {% if task.due_time == null %}
               <a><br> Due Date: {{ task.due_date }}</a>

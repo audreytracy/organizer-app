@@ -163,9 +163,27 @@ def delete_task(request, id:int):
     global logged_in_user
     if logged_in_user == 0:
         return render(request, "organizer/login.html", context=None)
+    acct_id = logged_in_user
     task = Task.objects.get(pk = id)
     task.delete()
-    # return render(request, 'organizer/to_do.html', context = {'acct' : acct_id, 'cats': cats, "task":task})
+    return redirect('to_do')
+
+def complete_task(request, id:int):
+    global logged_in_user
+    if logged_in_user == 0:
+        return render(request, "organizer/login.html", context=None)
+    task = Task.objects.get(pk = id)
+    #cats = Category.objects.filter(account_id = acct_id).order_by("name")
+    acct_id = logged_in_user
+    if request.method == 'POST':
+        acct = Account.objects.get(pk=acct_id)
+        try:
+            Task.objects.filter(task_id = task.task_id).update(account_id = acct, completed = True)
+        except IntegrityError as e:
+            return render(request, "organizer/edit_task.html", context={"acct": acct_id, "success_message": "Error: " + str(e), "task":task})
+        else:
+            return render(request, "organizer/edit_task.html", context={"acct": acct_id, "success_message": "updated!", "task":task})#, "initial_event":event})
+    #return render(request, 'organizer/edit_task.html', context = {'acct' : acct_id, 'cats': cats, "task":task})
     return redirect('to_do')
 
 
