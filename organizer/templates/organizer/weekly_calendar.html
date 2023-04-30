@@ -3,7 +3,6 @@
     <a href="{% url 'weekly-calendar' %}?week_start={{ prev_week }}">&lt;&lt; Previous week</a>
     <h1>{{ month }} {{ year }}</h1>
     <a href="{% url 'weekly-calendar' %}?week_start={{ next_week }}">Next week &gt;&gt;</a></div>
-
 <div>
     <select id="calendar-view">
         <option value="yearly">Yearly calendar</option>
@@ -73,18 +72,32 @@
 .nav-buttons {
     margin-top: 20px;
 }
+.week {
+    display: flex;
+}
+
+.week .day {
+    border-top: 1px solid black;
+}
+
+.week .day:first-child {
+    border-left: 1px solid black;
+}
+
+.week .day:last-child {
+    border-right: 1px solid black;
+}
+
 </style>
 
-
-
-    <script>
-        const calendarView = document.getElementById('calendar-view');
-        calendarView.addEventListener('change', function() {
-            const selectedView = calendarView.value;
-            if (selectedView === 'yearly') {
-                window.location.href = '#';
-            } else if (selectedView === 'monthly') {
-                window.location.href = '#';
-            }
-        });
-    </script>
+<script>
+    const calendarView = document.getElementById('calendar-view');
+    calendarView.addEventListener('change', function() {
+        const selectedView = calendarView.value;
+        if (selectedView === 'yearly') {
+        window.location.href = '#';
+        } else if (selectedView === 'monthly') {
+        window.location.href = "{% url 'monthly_calendar' acct_id=acct_id %}";
+    }
+});
+</script>

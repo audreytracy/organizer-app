@@ -5,9 +5,18 @@ from django.views.generic import TemplateView
 from django.utils import timezone
 from calendar import monthrange
 from datetime import timedelta
+from datetime import date
 
-class WeeklyCalendarView(TemplateView):
+class CalendarView(TemplateView):
     template_name = 'weekly_calendar.html'
+
+    def get_template_names(self):
+        if 'week' in self.request.GET:
+            return ['weekly_calendar.html']
+        elif 'month' in self.request.GET:
+            return ['monthly_calendar.html']
+        else:
+            return super().get_template_names()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -16,29 +25,57 @@ class WeeklyCalendarView(TemplateView):
         year = int(self.request.GET.get('year', timezone.now().year))
         month = int(self.request.GET.get('month', timezone.now().month))
 
-        # Calculate the first and last days of the week
-        # (Assuming Sunday is the first day of the week)
-        first_day_of_month = timezone.datetime(year, month, 1)
-        last_day_of_month = timezone.datetime(year, month, monthrange(year, month)[1])
-        first_day_of_week = first_day_of_month - timedelta(days=first_day_of_month.weekday())
-        last_day_of_week = last_day_of_month + timedelta(days=6 - last_day_of_month.weekday())
+        # Calculate the first and last days of the month
+        first_day_of_month = date(year, month, 1)
+        last_day_of_month = date(year, month, monthrange(year, month)[1])
 
-        # Generate a list of dates representing each day of the week
+        # Generate a list of dates representing each day of the month
         dates = []
-        for i in range(7):
-            date = first_day_of_week + timedelta(days=i)
-            dates.append(date)
+        for day in range(1, last_day_of_month.day + 1):
+            date_obj = date(year, month, day)
+            dates.append(date_obj)
 
-        # Add the year, month, first_day_of_week, and last_day_of_week to the context
+        # Generate a list of weeks, where each week is a list of 7 days
+        weeks = []
+        week = []
+        for i, day in enumerate(dates):
+            week.append(day)
+            if (i + 1) % 7 == 0:
+                weeks.append(week)
+                week = []
+
+        # Calculate the previous and next month dates for the links
+        prev_month = month - 1 if month > 1 else 12
+        prev_year = year - 1 if month == 1 else year
+        next_month = month + 1 if month < 12 else 1
+        next_year = year + 1 if month == 12 else year
+
+        # Add the year, month, month_name, dates, and link dates to the context
         context['year'] = year
         context['month'] = month
-        context['first_day_of_week'] = first_day_of_week
-        context['last_day_of_week'] = last_day_of_week
+        context['month_name'] = timezone.datetime(year, month, 1).strftime('%B')
         context['dates'] = dates
-        
+        context['prev_year'] = prev_year
+        context['prev_month'] = prev_month
+        context['next_year'] = next_year
+        context['next_month'] = next_month
+
         return context
 
+    # def get_events_for_day(self, day):
+    #     # Get the events for the given day
+    #     events = Event.objects.filter(date=day)
 
+    #     return events
+
+def monthly_calendar(request, acct_id):
+    return render(request, "organizer/monthly_calendar.html", context={'acct_id' : acct_id})
+
+def weekly_calendar(request, acct_id):
+    return render(request, "organizer/weekly_calendar.html", context={'acct_id' : acct_id})
+
+def calendar(request, acct_id):
+    return render(request, "organizer/weekly_calendar.html", context={'acct_id' : acct_id})
 
 def login(request):
     if request.method == 'POST':
@@ -63,6 +100,3 @@ def create(request):
         Account.objects.create(username = username, email = email, password = password)
         return render(request, 'organizer/create.html', context = {'success_message' : "account created successfully!"})
     return render(request, 'organizer/create.html', context = None)
-
-def calendar(request, acct_id):
-    return render(request, "organizer/weekly_calendar.html", context={'acct_id' : acct_id})
