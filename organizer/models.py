@@ -59,4 +59,3 @@ class Task(models.Model):
     due_time = models.TimeField(auto_now=False, auto_now_add=False, null = True, blank = True)
     completed = models.BooleanField()
     created_on = models.DateTimeField(auto_now=True)
-
