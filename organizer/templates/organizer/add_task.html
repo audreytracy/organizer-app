@@ -52,6 +52,8 @@
       <td><label for="category">Category</label></td>
       <td>
         <select name="category" id="category">
+          <option value="None" default>no category</option>
+
           {%for category in cats%}
           <option value="{{category.category_id}}">
             {{category.name}}

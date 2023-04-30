@@ -108,7 +108,10 @@ def command(request, id:int, cmd:str):
         if request.method == 'POST':
             acct = Account.objects.get(pk=acct_id)
             category_id = request.POST.get('category_box')
-            category = Category.objects.get(pk = category_id)
+            if category_id == 'None':
+                category = None
+            else:
+                category = Category.objects.get(pk = category_id)    
             location = request.POST.get('location_text_box')
             event_start_date = request.POST.get('sdate')
             event_start_time = request.POST.get('stime')
@@ -145,9 +148,8 @@ class WeeklyCalendarView(TemplateView):
 
         # Generate a list of dates representing each day of the week
         dates = ['' for i in range(first_day_shift)]
-        for i in range(last_day_of_month.day):
-            date = first_day_of_week + timedelta(days=i)
-            dates.append(date)
+        dates.extend([i + 1 for i in range(last_day_of_month.day)])
+
         months = {1:'January', 2:'February', 3:'March', 4:'April',5:'May', 6:'June', 7:'July', 8:'August',9:'September', 10:'October', 11:'November', 12:'December'}
         # Add the year, month, first_day_of_week, and last_day_of_week to the context
         context['year'] = year
@@ -165,7 +167,10 @@ def addEvent(request):
     if request.method == 'POST':
         acct = Account.objects.get(pk=acct_id)
         category_id = request.POST.get('category_box')
-        category = Category.objects.get(pk = category_id)
+        if category_id == 'None':
+            category = None
+        else:
+            category = Category.objects.get(pk = category_id)        
         location = request.POST.get('location_text_box')
         event_start_date = request.POST.get('sdate')
         event_start_time = request.POST.get('stime')
@@ -174,7 +179,6 @@ def addEvent(request):
         name = request.POST.get('n')
         description = request.POST.get('description')
         try:
-            print("test")
             Event.objects.create(account_id = acct, category_id = category, location = location, event_start_date = event_start_date, event_start_time = event_start_time if event_start_time != '' else None, event_end_date = event_end_date if event_end_date != '' else None, event_end_time = event_end_time if event_end_time != '' else None, name = name, description = description)
         except IntegrityError as e:
             return render(request, "organizer/add_event.html", context={"acct": acct_id, "success_message": "Error: " + str(e), "cats": cats})
@@ -202,7 +206,10 @@ def add_task(request):
     if request.method == 'POST':
         acct = Account.objects.get(pk=acct_id)
         category_id = request.POST.get('category')
-        category = Category.objects.get(pk = category_id)
+        if category_id == 'None':
+            category = None
+        else:
+            category = Category.objects.get(pk = category_id)    
         due_date = request.POST.get('duedate')
         due_time = request.POST.get('duetime')
         name = request.POST.get('name')
@@ -229,8 +236,11 @@ def edit_task(request, id:int):
     cats = Category.objects.filter(account_id = acct_id).order_by("name")
     if request.method == 'POST':
         acct = Account.objects.get(pk=acct_id)
-        category_id = request.POST.get('category_box')
-        category = Category.objects.get(pk = category_id)
+        category_id = request.POST.get('category_box') 
+        if category_id == 'None':
+            category = None
+        else:
+            category = Category.objects.get(pk = category_id)    
         completed = True if request.POST.get('completed') == 'True' else False
         print(completed)
         due_date = request.POST.get('duedate')
@@ -262,3 +272,8 @@ def complete_task(request, id:int):
     completed = task.completed
     Task.objects.filter(task_id = task.task_id).update(completed = not completed)
     return redirect('to_do')
+
+def day_events(request, year:int, month:int, day:int):
+    date = timezone.datetime(year, month, day)
+    events = Event.objects.filter(event_start_date = date)
+    return render(request, "organizer/day_events.html", context={'events':events})

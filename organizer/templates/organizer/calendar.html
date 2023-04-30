@@ -56,7 +56,7 @@
     <ul class="week">
         {% for date in dates %}
         <li>
-            <div class="date-label">{{ date|date:'d' }}</div>
+            <a href="/day_events/{{year}}/{{month_num}}/{{ date }}" class="date-label">{{ date }}</a>
         </li>
         {% endfor %}
     </ul>
