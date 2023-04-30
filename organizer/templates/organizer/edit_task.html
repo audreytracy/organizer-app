@@ -64,7 +64,11 @@
         </tr>
         <tr>
           <td><label for="completed">completed</label></td>
-          <td><input id="completed" type="checkbox" name="completed" value = "{{task.completed}}"></td>
+          {% if task.completed %}
+          <td><input id="completed" type="checkbox" name="completed" value = "True" checked></td>
+          {% else %}
+          <td><input id="completed" type="checkbox" name="completed" value = 'True'></td>
+            {% endif %}
         </tr>
         <tr>
           <td><label for="duedate">due date</label></td>
